@@ -1,0 +1,5 @@
+import Link from 'next/link';
+import { headers } from 'next/headers';
+import { redirect } from 'next/navigation';
+import { auth } from '@/lib/auth';
+export default async function ProfilePage(){const session=await auth.api.getSession({headers:await headers()});if(!session)redirect('/signin?callbackURL=%2Fprofile');return <div className="profile-page"><div className="profile-heading"><h1>আমার প্রোফাইল</h1><p>আপনার অ্যাকাউন্টের তথ্য এখানে দেখুন।</p></div><section className="profile-card"><div className="profile-avatar">{session.user.name?.slice(0,1)||'👤'}</div><div className="profile-user"><h2>{session.user.name}</h2><p>{session.user.email}</p></div><Link className="button-outline" href="/profile/update">তথ্য আপডেট</Link></section><section className="profile-card profile-info"><h2>তথ্য</h2><p><span>নাম</span><strong>{session.user.name}</strong></p><p><span>ইমেইল</span><strong>{session.user.email}</strong></p><Link className="button full-button" href="/profile/update">আপডেট</Link></section></div>}

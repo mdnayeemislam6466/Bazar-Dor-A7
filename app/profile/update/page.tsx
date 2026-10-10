@@ -1,0 +1,7 @@
+'use client';
+import { useEffect,useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { authClient } from '@/lib/auth-client';
+import toast from 'react-hot-toast';
+export default function UpdateProfile(){const {data:session,isPending}=authClient.useSession();const [name,setName]=useState('');const [busy,setBusy]=useState(false);const router=useRouter();useEffect(()=>{if(session?.user.name)setName(session.user.name)},[session]);useEffect(()=>{if(!isPending&&!session)router.replace('/signin?callbackURL=%2Fprofile%2Fupdate')},[isPending,session,router]);async function submit(e:React.FormEvent){e.preventDefault();if(!name.trim())return toast.error('নাম লিখুন');setBusy(true);try{const res=await authClient.updateUser({name:name.trim()});if(res.error)toast.error(res.error.message||'আপডেট করা যায়নি');else{toast.success('প্রোফাইল আপডেট হয়েছে');router.push('/profile');router.refresh()}}catch{toast.error('আপডেট করা যায়নি')}finally{setBusy(false)}}return <div className="profile-page"><div className="profile-heading"><h1>তথ্য আপডেট</h1><p>আপনার অ্যাকাউন্টের নাম পরিবর্তন করুন।</p></div><form className="auth-card update-card" onSubmit={submit}><label>নাম<input value={name} onChange={e=>setName(e.target.value)} placeholder="আপনার নাম" required/></label><button className="button full-button" disabled={busy}>{busy?'আপডেট হচ্ছে…':'তথ্য আপডেট করুন'}</button><Link className="back-home" href="/profile">প্রোফাইলে ফিরে যান</Link></form></div>}

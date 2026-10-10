@@ -1,0 +1,3 @@
+import Link from 'next/link';
+import { Product,bn } from '@/lib/products';
+export default function ProductCard({product:p}:{product:Product}){const dir=p.change>0?'down':p.change<0?'up':'flat';return <Link href={`/product/${p.slug}`} className="product-card"><div className="product-top"><div className="product-emoji">{p.emoji}</div><div><h3>{p.name}</h3><p>{p.unit}</p></div></div><div className="price-bottom"><div><small>আজকের দাম</small><strong>{bn(p.price)} <span>টাকা</span></strong></div><span className={`change ${dir}`}>{p.change>0?'▲':p.change<0?'▼':'—'} {bn(Math.abs(p.change))}%</span></div></Link>}
